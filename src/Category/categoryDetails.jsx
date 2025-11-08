@@ -1,9 +1,9 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { FaEye } from 'react-icons/fa';
-import { useParams } from 'react-router-dom';
-import swal from 'sweetalert';
-import { Helmet } from 'react-helmet-async';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { FaEye } from "react-icons/fa";
+import { useParams } from "react-router-dom";
+import swal from "sweetalert";
+import { Helmet } from "react-helmet-async";
 
 const CategoryDetails = () => {
   const { categoryName } = useParams(); // Extract category name from URL
@@ -12,16 +12,19 @@ const CategoryDetails = () => {
   const [cart, setCart] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Number of items per page
-  const [sortOrder, setSortOrder] = useState('asc'); // Sorting order
-  const [searchTerm, setSearchTerm] = useState(''); // Search term
+  const [sortOrder, setSortOrder] = useState("asc"); // Sorting order
+  const [searchTerm, setSearchTerm] = useState(""); // Search term
 
   useEffect(() => {
-    axios.get(`https://y-plum-nine.vercel.app/products?category=${categoryName}`)
+    axios
+      .get(`https://y-plum-nine.vercel.app/products?category=${categoryName}`)
       .then((res) => {
-        const filteredMedicines = res.data.filter(medicine => medicine.categoryName === categoryName);
+        const filteredMedicines = res.data.filter(
+          (medicine) => medicine.categoryName === categoryName
+        );
         setMedicines(filteredMedicines);
       })
-      .catch((error) => console.error('Error fetching medicines:', error));
+      .catch((error) => console.error("Error fetching medicines:", error));
   }, [categoryName]);
 
   useEffect(() => {
@@ -45,7 +48,11 @@ const CategoryDetails = () => {
     } else {
       const updatedCart = [...cart, { ...medicine, quantity: 1 }];
       updateCart(updatedCart);
-      swal("Added to Cart!", `${medicine.name} has been added to your cart.`, "success");
+      swal(
+        "Added to Cart!",
+        `${medicine.name} has been added to your cart.`,
+        "success"
+      );
     }
   };
 
@@ -81,17 +88,24 @@ const CategoryDetails = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
   const filteredAndSortedMedicines = medicines
-    .filter(medicine => {
-      return medicine.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-             medicine.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-             medicine.companyName?.toLowerCase().includes(searchTerm.toLowerCase());
+    .filter((medicine) => {
+      return (
+        medicine.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        medicine.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        medicine.companyName?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     })
     .sort((a, b) => {
-      return sortOrder === 'asc' ? a.price - b.price : b.price - a.price;
+      return sortOrder === "asc" ? a.price - b.price : b.price - a.price;
     });
 
-  const currentMedicines = filteredAndSortedMedicines.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredAndSortedMedicines.length / itemsPerPage);
+  const currentMedicines = filteredAndSortedMedicines.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+  const totalPages = Math.ceil(
+    filteredAndSortedMedicines.length / itemsPerPage
+  );
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -100,12 +114,12 @@ const CategoryDetails = () => {
   return (
     <div className="container mx-auto min-h-screen p-4">
       <Helmet>
-        <title>Medi-Shop | Categories</title>
+        <title>CareNext Pharamacy | Categories</title>
       </Helmet>
       <h1 className="text-center text-3xl text-gray-600 font-bold border-b-2 uppercase mx-auto my-4 p-2">
         {categoryName}
       </h1>
-      
+
       <div className="flex justify-between gap-2 items-center mb-4">
         <input
           type="text"
@@ -114,22 +128,39 @@ const CategoryDetails = () => {
           onChange={handleSearch}
           className="border w-[60%] p-2 rounded"
         />
-       <div className="mb-6"> <h1 className="text-lg font-bold underline" > Sort by Price :</h1>
-        <div className="flex">
-          <button  onClick={() => handleSort('asc')} className="btn    mr-2"> (Asc)</button>
-          <button  onClick={() => handleSort('desc')} className="btn   "> (Desc)</button>
-        </div></div>
+        <div className="mb-6">
+          {" "}
+          <h1 className="text-lg font-bold underline"> Sort by Price :</h1>
+          <div className="flex">
+            <button onClick={() => handleSort("asc")} className="btn    mr-2">
+              {" "}
+              (Asc)
+            </button>
+            <button onClick={() => handleSort("desc")} className="btn   ">
+              {" "}
+              (Desc)
+            </button>
+          </div>
+        </div>
       </div>
-      
+
       <div className="overflow-x-auto">
         <table className="table w-full">
           <thead>
             <tr>
               <th className="text-xl border-2 font-bold text-black py-2">ID</th>
-              <th className="text-xl border-2 font-bold text-black py-2">Name</th>
-              <th className="text-xl border-2 font-bold text-black py-2">Description</th>
-              <th className="text-xl border-2 font-bold text-black py-2">Price</th>
-              <th className="text-xl border-2 font-bold text-black py-2">Actions</th>
+              <th className="text-xl border-2 font-bold text-black py-2">
+                Name
+              </th>
+              <th className="text-xl border-2 font-bold text-black py-2">
+                Description
+              </th>
+              <th className="text-xl border-2 font-bold text-black py-2">
+                Price
+              </th>
+              <th className="text-xl border-2 font-bold text-black py-2">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -164,7 +195,9 @@ const CategoryDetails = () => {
           <button
             key={i}
             onClick={() => handlePageChange(i + 1)}
-            className={`mx-1 px-3 py-1 border ${currentPage === i + 1 ? 'bg-blue-500 text-white' : ''}`}
+            className={`mx-1 px-3 py-1 border ${
+              currentPage === i + 1 ? "bg-blue-500 text-white" : ""
+            }`}
           >
             {i + 1}
           </button>
@@ -195,10 +228,7 @@ const CategoryDetails = () => {
               </p>
             </div>
             <div className="p-4 border-t flex justify-end">
-              <button
-                className="btn btn-secondary"
-                onClick={closeModal}
-              >
+              <button className="btn btn-secondary" onClick={closeModal}>
                 Close
               </button>
             </div>

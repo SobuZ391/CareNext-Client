@@ -1,20 +1,19 @@
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import useAuth from './../Hooks/useAuth';
+import useAuth from "../Hooks/useAuth";
 import SocialLogin from "./SocialLogin";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaGoogle } from "react-icons/fa";
 import { useState } from "react";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from "react-helmet-async";
 
 const SignUp = () => {
   const axiosPublic = useAxiosPublic();
   const { createUser, updateUserProfile } = useAuth();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  // Function to toggle password visibility
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
@@ -25,12 +24,11 @@ const SignUp = () => {
     formState: { errors },
   } = useForm();
 
-  // Navigation systems
   const navigate = useNavigate();
   const location = useLocation();
   const from = location?.state || "/";
 
-  // Function to verify the password based on the given criteria
+  // Password Validation
   const verifyPassword = (password) => {
     const hasUppercase = /[A-Z]/.test(password);
     const hasLowercase = /[a-z]/.test(password);
@@ -41,64 +39,43 @@ const SignUp = () => {
       toast.error("Password must contain at least one uppercase letter.");
       return false;
     }
-
     if (!hasLowercase) {
       toast.error("Password must contain at least one lowercase letter.");
       return false;
     }
-
     if (!hasNumeric) {
       toast.error("Password must contain at least one number.");
       return false;
     }
-
     if (!hasValidLength) {
       toast.error("Password must be at least 6 characters long.");
       return false;
     }
-
     return true;
   };
 
   const onSubmit = (data) => {
     const { email, password, image, fullName, role } = data;
 
-    // Verify the password
-    if (!verifyPassword(password)) {
-      return;
-    }
+    if (!verifyPassword(password)) return;
 
-    // Create the user and update the profile
     createUser(email, password)
       .then(() => {
         updateUserProfile(fullName, image)
           .then(() => {
-            // Create user entry in the database
-            const userInfo = {
-              name: fullName,
-              email: email,
-              role: role,
-              image: image
-            };
+            const userInfo = { name: fullName, email, role, image };
 
-            axiosPublic.post('/users', userInfo)
-              .then(res => {
-                if (res.data.insertedId) {
-                  // Display success toast after successful registration and profile update
-                  toast.success("Registration successful! Welcome!");
-
-                  // Delay navigation by 1 second (1000ms) to allow the toast to be displayed
-                  setTimeout(() => {
-                    navigate(from);
-                  }, 1000);
-                }
-              })
-              .catch(error => {
-                toast.error("Failed to create user in the database: " + error.message);
-              });
+            axiosPublic.post("/users", userInfo).then((res) => {
+              if (res.data.insertedId) {
+                toast.success("Registration successful! Welcome!");
+                setTimeout(() => {
+                  navigate(from);
+                }, 1000);
+              }
+            });
           })
           .catch((error) => {
-            toast.error("Failed to update user profile: " + error.message);
+            toast.error("Failed to update profile: " + error.message);
           });
       })
       .catch((error) => {
@@ -108,132 +85,115 @@ const SignUp = () => {
 
   return (
     <>
-     <Helmet>
-        <title>Medi-Shop | Register</title>
-       
+      <Helmet>
+        <title>CareNext Pharamacy | Register</title>
       </Helmet>
-      <div
-        className="hero flex justify-center items-center min-h-screen bg-base-200"
-        style={{
-          backgroundImage: `url(https://img.freepik.com/free-photo/abstract-digital-grid-black-background_53876-97647.jpg?size=626&ext=jpg&ga=GA1.1.1224184972.1715385600&semt=ais_user)`
-        }}
-      >
-        <div className="w-full mx-auto lg:w-[40rem]">
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="w-[90%] mx-auto shadow-2xl rounded-xl bg-gray-300 glass"
-          >
-            <div className="text-center lg:text-left">
-              <h1 className="text-5xl font-bold text-center mt-20 p-3 rounded-t-xl text-gray-900">
-                Welcome
-              </h1>
-              <p className="text-center">
-                Please enter your credentials to Sign Up!
-              </p>
-            </div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-blue-50 p-4">
+        {/* Card */}
+        <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-8">
+          {/* Header */}
+          <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">
+            Welcome
+          </h1>
+          <p className="text-center text-gray-500 mb-6">
+            Please enter your credentials to Sign Up!
+          </p>
 
-            <div className="card-body">
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Full Name</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="Full name"
-                  className="input input-bordered"
-                  {...register("fullName", { required: true })}
-                />
-                {errors.fullName && (
-                  <span className="text-red-500">This field is required</span>
-                )}
-              </div>
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Email</span>
-                </label>
-                <input
-                  type="email"
-                  placeholder="Email"
-                  className="input input-bordered"
-                  {...register("email", { required: true })}
-                />
-                {errors.email && (
-                  <span className="text-red-500">This field is required</span>
-                )}
-              </div>
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Image URL</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="Image URL"
-                  className="input input-bordered"
-                  {...register("image")}
-                />
-              </div>
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Password</span>
-                </label>
-                <div className="input-group flex items-center">
-                  <input
-                    type={isPasswordVisible ? "text" : "password"}
-                    placeholder="Password"
-                    className="input input-bordered w-[90%]"
-                    {...register("password", { required: true })}
-                  />
-                  {/* Eye icon to toggle password visibility */}
-                  <button
-                    type="button"
-                    className="btn btn-sm btn-ghost"
-                    onClick={togglePasswordVisibility}
-                  >
-                    {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
-                  </button>
-                </div>
-                {errors.password && (
-                  <span className="text-red-500">This field is required</span>
-                )}
-              </div>
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Role</span>
-                </label>
-                <select
-                  className="input input-bordered"
-                  {...register("role", { required: true })}
-                >
-                  <option value="user">User</option>
-                  <option value="seller">Seller</option>
-                </select>
-                {errors.role && (
-                  <span className="text-red-500">This field is required</span>
-                )}
-              </div>
-              <div className="form-control mt-6 p-0">
-                <button
-                  type="submit"
-                  className="btn bg-gray-800 border-2 text-white text-xl shadow-xl"
-                >
-                  Register
-                </button>
-              </div>
-              <label className="label text-lg">
-                Have an account?{" "}
-                <Link
-                  to="/login"
-                  className="label-text-alt link link-hover text-lg rounded-xl p-2 glass"
-                >
-                  Please Login
-                </Link>
-              </label>
-              <SocialLogin />
+          {/* Form */}
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            {/* Full Name */}
+            <input
+              type="text"
+              placeholder="Full name"
+              className="w-full px-4 py-3 border rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              {...register("fullName", { required: true })}
+            />
+            {errors.fullName && (
+              <span className="text-red-500 text-sm">
+                Full name is required
+              </span>
+            )}
+
+            {/* Email */}
+            <input
+              type="email"
+              placeholder="Email"
+              className="w-full px-4 py-3 border rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              {...register("email", { required: true })}
+            />
+            {errors.email && (
+              <span className="text-red-500 text-sm">Email is required</span>
+            )}
+
+            {/* Image URL */}
+            <input
+              type="text"
+              placeholder="Image URL"
+              className="w-full px-4 py-3 border rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              {...register("image")}
+            />
+
+            {/* Password */}
+            <div className="relative">
+              <input
+                type={isPasswordVisible ? "text" : "password"}
+                placeholder="Password"
+                className="w-full px-4 py-3 border rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none pr-10"
+                {...register("password", { required: true })}
+              />
+              <button
+                type="button"
+                className="absolute right-3 top-3 text-gray-500"
+                onClick={togglePasswordVisibility}
+              >
+                {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+              </button>
             </div>
+            {errors.password && (
+              <span className="text-red-500 text-sm">Password is required</span>
+            )}
+
+            {/* Role */}
+            <select
+              className="w-full px-4 py-3 border rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              {...register("role", { required: true })}
+            >
+              <option value="user">User</option>
+              <option value="seller">Seller</option>
+            </select>
+            {errors.role && (
+              <span className="text-red-500 text-sm">Role is required</span>
+            )}
+
+            {/* Register Button */}
+            <button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 transition text-white py-3 rounded-lg font-medium shadow"
+            >
+              Register
+            </button>
           </form>
+
+          {/* Switch to Login */}
+          <p className="text-center text-gray-600 mt-6 text-sm">
+            Already have an account?{" "}
+            <Link to="/login" className="text-blue-600 hover:underline">
+              Please Login
+            </Link>
+          </p>
+
+          {/* Divider */}
+          <div className="flex items-center my-6">
+            <hr className="flex-1 border-gray-300" />
+            <span className="px-3 text-gray-500 text-sm">Or continue with</span>
+            <hr className="flex-1 border-gray-300" />
+          </div>
+
+          {/* Social Login */}
+          <SocialLogin />
         </div>
+        <ToastContainer />
       </div>
-      <ToastContainer />
     </>
   );
 };

@@ -8,14 +8,11 @@ const AdminHome = () => {
     return (
         <div>
           <Helmet>
-        <title>Medi-Shop | Dashboard </title>
+        <title>CareNest Pharmacy | Dashboard </title>
        
       </Helmet>
             <h2 className='text-3xl' >
-                <span>Hi,Welcome </span>
-                {
-                    user?.displayName? user.displayName :'back'
-                }
+             
                 <UserDashboard></UserDashboard>
                 
             </h2>

@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import useApi from '../../Hooks/useApi';
-import Swal from 'sweetalert2';
-import { Helmet } from 'react-helmet-async';
+import React, { useState, useEffect } from "react";
+import useApi from "../../Hooks/useApi";
+import Swal from "sweetalert2";
+import { Helmet } from "react-helmet-async";
 
 const ManageUsers = () => {
-  const { getUsers, promoteToAdmin, promoteToSeller, downgradeToUser } = useApi();
+  const { getUsers, promoteToAdmin, promoteToSeller, downgradeToUser } =
+    useApi();
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    getUsers().then(data => setUsers(data));
+    getUsers().then((data) => setUsers(data));
   }, [getUsers]);
 
   const handlePromoteToAdmin = (user) => {
@@ -19,19 +20,25 @@ const ManageUsers = () => {
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Confirm"
+      confirmButtonText: "Confirm",
     }).then((result) => {
       if (result.isConfirmed) {
-        promoteToAdmin(user._id).then(res => {
-          if (res.modifiedCount > 0) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Success!',
-              text: 'User promoted to Admin',
-            });
-            setUsers(prevUsers => prevUsers.map(u => u._id === user._id ? { ...u, role: 'admin' } : u));
-          }
-        }).catch(err => Swal.fire('Error', err.message, 'error'));
+        promoteToAdmin(user._id)
+          .then((res) => {
+            if (res.modifiedCount > 0) {
+              Swal.fire({
+                icon: "success",
+                title: "Success!",
+                text: "User promoted to Admin",
+              });
+              setUsers((prevUsers) =>
+                prevUsers.map((u) =>
+                  u._id === user._id ? { ...u, role: "admin" } : u
+                )
+              );
+            }
+          })
+          .catch((err) => Swal.fire("Error", err.message, "error"));
       }
     });
   };
@@ -44,19 +51,25 @@ const ManageUsers = () => {
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Confirm"
+      confirmButtonText: "Confirm",
     }).then((result) => {
       if (result.isConfirmed) {
-        promoteToSeller(user._id).then(res => {
-          if (res.modifiedCount > 0) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Success!',
-              text: 'User promoted to Seller',
-            });
-            setUsers(prevUsers => prevUsers.map(u => u._id === user._id ? { ...u, role: 'seller' } : u));
-          }
-        }).catch(err => Swal.fire('Error', err.message, 'error'));
+        promoteToSeller(user._id)
+          .then((res) => {
+            if (res.modifiedCount > 0) {
+              Swal.fire({
+                icon: "success",
+                title: "Success!",
+                text: "User promoted to Seller",
+              });
+              setUsers((prevUsers) =>
+                prevUsers.map((u) =>
+                  u._id === user._id ? { ...u, role: "seller" } : u
+                )
+              );
+            }
+          })
+          .catch((err) => Swal.fire("Error", err.message, "error"));
       }
     });
   };
@@ -69,19 +82,25 @@ const ManageUsers = () => {
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Confirm"
+      confirmButtonText: "Confirm",
     }).then((result) => {
       if (result.isConfirmed) {
-        downgradeToUser(user._id).then(res => {
-          if (res.modifiedCount > 0) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Success!',
-              text: 'Seller downgraded to User',
-            });
-            setUsers(prevUsers => prevUsers.map(u => u._id === user._id ? { ...u, role: 'user' } : u));
-          }
-        }).catch(err => Swal.fire('Error', err.message, 'error'));
+        downgradeToUser(user._id)
+          .then((res) => {
+            if (res.modifiedCount > 0) {
+              Swal.fire({
+                icon: "success",
+                title: "Success!",
+                text: "Seller downgraded to User",
+              });
+              setUsers((prevUsers) =>
+                prevUsers.map((u) =>
+                  u._id === user._id ? { ...u, role: "user" } : u
+                )
+              );
+            }
+          })
+          .catch((err) => Swal.fire("Error", err.message, "error"));
       }
     });
   };
@@ -89,8 +108,7 @@ const ManageUsers = () => {
   return (
     <div>
       <Helmet>
-        <title>Medi-Shop | Dashboard | Manage Users</title>
-       
+        <title>CareNext Pharamacy | Dashboard | Manage Users</title>
       </Helmet>
       <h2 className="text-2xl font-semibold mb-4">Manage Users</h2>
       <div className="overflow-x-auto">
@@ -112,21 +130,27 @@ const ManageUsers = () => {
                 <td className="border px-4 py-2">{user.email}</td>
                 <td className="border px-4 py-2">{user.role}</td>
                 <td className="border px-4 py-2">
-                  {user.role === 'user' && (
+                  {user.role === "user" && (
                     <>
-                      <button className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                        onClick={() => handlePromoteToSeller(user)}>
+                      <button
+                        className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                        onClick={() => handlePromoteToSeller(user)}
+                      >
                         Promote to Seller
                       </button>
-                      <button className="bg-green-500 text-white px-4 py-2 rounded"
-                        onClick={() => handlePromoteToAdmin(user)}>
+                      <button
+                        className="bg-green-500 text-white px-4 py-2 rounded"
+                        onClick={() => handlePromoteToAdmin(user)}
+                      >
                         Promote to Admin
                       </button>
                     </>
                   )}
-                  {user.role === 'seller' && (
-                    <button className="bg-yellow-500 text-white px-4 py-2 rounded"
-                      onClick={() => handleDowngradeToUser(user)}>
+                  {user.role === "seller" && (
+                    <button
+                      className="bg-yellow-500 text-white px-4 py-2 rounded"
+                      onClick={() => handleDowngradeToUser(user)}
+                    >
                       Downgrade to User
                     </button>
                   )}

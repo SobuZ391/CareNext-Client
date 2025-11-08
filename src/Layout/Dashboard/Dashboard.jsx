@@ -2,8 +2,27 @@ import React, { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import useAdmin from "../../Hooks/useAdmin";
 import useSeller from "../../Hooks/useSeller";
-import { FaBars, FaTimes } from "react-icons/fa";
-import { Helmet } from 'react-helmet-async';
+import { 
+  FaBars, 
+  FaTimes, 
+  FaHome, 
+  FaUser, 
+  FaMoneyCheckAlt, 
+  FaTags,
+  FaHeartbeat,
+  FaPills,
+  FaUserMd,
+  FaUsers,
+  FaChartLine,
+  FaBullhorn,
+  FaFileInvoiceDollar,
+  FaCalendarCheck,
+  FaFileMedical,
+  FaCog,
+  FaQuestionCircle,
+  FaSignOutAlt
+} from "react-icons/fa";
+import { Helmet } from "react-helmet-async";
 
 const Dashboard = () => {
   const { isAdmin } = useAdmin();
@@ -15,168 +34,328 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen">
+    <div className="flex flex-col md:flex-row min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <Helmet>
-        <title>Medi-Shop | Dashboard </title>
-       
+        <title>
+          {isAdmin ? "Admin Dashboard" : isSeller ? "Seller Dashboard" : "Dashboard"}CareNest Pharmacy
+        </title>
       </Helmet>
-      <div className="w-full md:w-64 bg-orange-400 p-4">
-      <button
-      onClick={toggleMobileMenu}
-      className="md:hidden bg-orange-500 text-white p-2 rounded"
-    >
-      {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-    </button>
 
-        <ul className={`space-y-4 mt-4 md:block ${isMobileMenuOpen ? "block" : "hidden"}`}>
+      {/* Enhanced Sidebar */}
+      <div className="w-full md:w-72 bg-gradient-to-b from-blue-900 to-blue-800 shadow-xl">
+        {/* Sidebar Header */}
+        <div className="p-6 border-b border-blue-700 bg-gradient-to-r from-blue-800 to-blue-900">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-blue-600 rounded-lg">
+                <FaHeartbeat className="text-white text-xl" />
+              </div>
+              <div>
+                <h2 className="text-white font-semibold text-xl">CareNest Pharmacy</h2>
+                <p className="text-blue-200 text-sm">Medical Dashboard</p>
+              </div>
+            </div>
+            <button
+              onClick={toggleMobileMenu}
+              className="md:hidden bg-blue-700 text-white p-2 rounded-lg shadow-md hover:bg-blue-600 transition-all"
+              aria-label="Toggle Menu"
+            >
+              {isMobileMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+            </button>
+          </div>
+        </div>
+
+        {/* Navigation Menu */}
+        <nav
+          className={`px-4 py-6 space-y-2 md:block transition-all duration-300 ${
+            isMobileMenuOpen ? "block" : "hidden"
+          }`}
+        >
           {isAdmin && (
             <>
-              <li className=" outline btn-primary text-center rounded-xl text-black bg-gray-400  font-bold text-xl">
+              {/* Main Section */}
+              <div className="mb-6">
+                <h3 className="text-blue-300 text-xs font-semibold uppercase tracking-wider px-3 mb-3">
+                  Main
+                </h3>
                 <NavLink
                   to="/"
-                  className="block px-4 py-2  rounded hover:bg-orange-500"
-                  activeClassName="bg-orange-500"
+                  className={({ isActive }) =>
+                    `flex items-center px-4 py-3 rounded-xl transition-all duration-200 group ${
+                      isActive
+                        ? "bg-blue-600 text-white shadow-lg"
+                        : "text-blue-100 hover:bg-blue-700 hover:text-white"
+                    }`
+                  }
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Home
+                  <FaHome className="text-blue-300 group-hover:text-blue-200 mr-3 text-sm" />
+                  <span className="font-medium">Dashboard</span>
                 </NavLink>
-              </li>
-              <li className=" outline btn-primary text-center rounded-xl text-black bg-gray-400  font-bold text-xl">
+
                 <NavLink
                   to="/dashboard/adminHome"
-                  className="block px-4 py-2 rounded hover:bg-orange-500"
-                  activeClassName="bg-orange-500"
+                  className={({ isActive }) =>
+                    `flex items-center px-4 py-3 rounded-xl transition-all duration-200 group ${
+                      isActive
+                        ? "bg-blue-600 text-white shadow-lg"
+                        : "text-blue-100 hover:bg-blue-700 hover:text-white"
+                    }`
+                  }
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Admin Home
+                  <FaUserMd className="text-blue-300 group-hover:text-blue-200 mr-3 text-sm" />
+                  <span className="font-medium">Admin Home</span>
                 </NavLink>
-              </li>
-              <li className=" outline btn-primary text-center rounded-xl text-black bg-gray-400  font-bold text-xl">
+
                 <NavLink
                   to="/dashboard/manage-users"
-                  className="block px-4 py-2 rounded hover:bg-orange-500"
-                  activeClassName="bg-orange-500"
+                  className={({ isActive }) =>
+                    `flex items-center px-4 py-3 rounded-xl transition-all duration-200 group ${
+                      isActive
+                        ? "bg-blue-600 text-white shadow-lg"
+                        : "text-blue-100 hover:bg-blue-700 hover:text-white"
+                    }`
+                  }
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Manage Users
+                  <FaUsers className="text-blue-300 group-hover:text-blue-200 mr-3 text-sm" />
+                  <span className="font-medium">Manage Users</span>
                 </NavLink>
-              </li>
-              <li className=" outline btn-primary text-center rounded-xl text-black bg-gray-400  font-bold text-xl">
+              </div>
+
+              {/* Medical Section */}
+              <div className="mb-6">
+                <h3 className="text-blue-300 text-xs font-semibold uppercase tracking-wider px-3 mb-3">
+                  Medical
+                </h3>
                 <NavLink
                   to="/dashboard/manage-categories"
-                  className="block px-4 py-2 rounded hover:bg-orange-500"
-                  activeClassName="bg-orange-500"
+                  className={({ isActive }) =>
+                    `flex items-center px-4 py-3 rounded-xl transition-all duration-200 group ${
+                      isActive
+                        ? "bg-blue-600 text-white shadow-lg"
+                        : "text-blue-100 hover:bg-blue-700 hover:text-white"
+                    }`
+                  }
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Manage Categories
+                  <FaPills className="text-blue-300 group-hover:text-blue-200 mr-3 text-sm" />
+                  <span className="font-medium">Manage Medicines</span>
                 </NavLink>
-              </li>
-              <li className=" outline btn-primary text-center rounded-xl text-black bg-gray-400  font-bold text-xl">
+              </div>
+
+              {/* Business Section */}
+              <div className="mb-6">
+                <h3 className="text-blue-300 text-xs font-semibold uppercase tracking-wider px-3 mb-3">
+                  Business
+                </h3>
                 <NavLink
                   to="/dashboard/payment-management"
-                  className="block px-4 py-2 rounded hover:bg-orange-500"
-                  activeClassName="bg-orange-500"
+                  className={({ isActive }) =>
+                    `flex items-center px-4 py-3 rounded-xl transition-all duration-200 group ${
+                      isActive
+                        ? "bg-blue-600 text-white shadow-lg"
+                        : "text-blue-100 hover:bg-blue-700 hover:text-white"
+                    }`
+                  }
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Payment Management
+                  <FaMoneyCheckAlt className="text-blue-300 group-hover:text-blue-200 mr-3 text-sm" />
+                  <span className="font-medium">Payment Management</span>
                 </NavLink>
-              </li>
-              <li className=" outline btn-primary text-center rounded-xl text-black bg-gray-400  font-bold text-xl">
+
                 <NavLink
                   to="/dashboard/sales-report"
-                  className="block px-4 py-2 rounded hover:bg-orange-500"
-                  activeClassName="bg-orange-500"
+                  className={({ isActive }) =>
+                    `flex items-center px-4 py-3 rounded-xl transition-all duration-200 group ${
+                      isActive
+                        ? "bg-blue-600 text-white shadow-lg"
+                        : "text-blue-100 hover:bg-blue-700 hover:text-white"
+                    }`
+                  }
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Sales Report
+                  <FaChartLine className="text-blue-300 group-hover:text-blue-200 mr-3 text-sm" />
+                  <span className="font-medium">Sales Report</span>
                 </NavLink>
-              </li>
-              <li className=" outline btn-primary text-center rounded-xl text-black bg-gray-400  font-bold text-xl">
+
                 <NavLink
                   to="/dashboard/banner-management"
-                  className="block px-4 py-2 rounded hover:bg-orange-500"
-                  activeClassName="bg-orange-500"
+                  className={({ isActive }) =>
+                    `flex items-center px-4 py-3 rounded-xl transition-all duration-200 group ${
+                      isActive
+                        ? "bg-blue-600 text-white shadow-lg"
+                        : "text-blue-100 hover:bg-blue-700 hover:text-white"
+                    }`
+                  }
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Banner Management
+                  <FaBullhorn className="text-blue-300 group-hover:text-blue-200 mr-3 text-sm" />
+                  <span className="font-medium">Promotions</span>
                 </NavLink>
-              </li>
+              </div>
             </>
           )}
 
           {isSeller && (
-            <div>
-              <h1 className="text-2xl font-bold border-2 rounded-xl p-2 bg-gray-300">
-                Seller Dashboard
-              </h1>
-              <li>
+            <>
+              {/* Seller Header */}
+              <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-xl p-4 mb-6">
+                <h2 className="text-white font-bold text-lg flex items-center">
+                  <FaUserMd className="mr-2" />
+                  Seller Portal
+                </h2>
+                <p className="text-green-100 text-sm">Manage your medicine store</p>
+              </div>
+
+              {/* Main Section */}
+              <div className="mb-6">
+                <h3 className="text-blue-300 text-xs font-semibold uppercase tracking-wider px-3 mb-3">
+                  Main
+                </h3>
                 <NavLink
                   to="/"
-                  className="block px-4 py-2 my-2 rounded hover:bg-orange-500"
-                  activeClassName="bg-orange-500"
+                  className={({ isActive }) =>
+                    `flex items-center px-4 py-3 rounded-xl transition-all duration-200 group ${
+                      isActive
+                        ? "bg-blue-600 text-white shadow-lg"
+                        : "text-blue-100 hover:bg-blue-700 hover:text-white"
+                    }`
+                  }
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Home
+                  <FaHome className="text-blue-300 group-hover:text-blue-200 mr-3 text-sm" />
+                  <span className="font-medium">Home</span>
                 </NavLink>
-              </li>
-              <li>
+
                 <NavLink
                   to="/dashboard/user-dashboard"
-                  className="block px-4 py-2 my-2 rounded hover:bg-orange-500"
-                  activeClassName="bg-orange-500"
+                  className={({ isActive }) =>
+                    `flex items-center px-4 py-3 rounded-xl transition-all duration-200 group ${
+                      isActive
+                        ? "bg-blue-600 text-white shadow-lg"
+                        : "text-blue-100 hover:bg-blue-700 hover:text-white"
+                    }`
+                  }
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Profile
+                  <FaUser className="text-blue-300 group-hover:text-blue-200 mr-3 text-sm" />
+                  <span className="font-medium">Profile</span>
                 </NavLink>
-              </li>
-              <li>
+              </div>
+
+              {/* Inventory Section */}
+              <div className="mb-6">
+                <h3 className="text-blue-300 text-xs font-semibold uppercase tracking-wider px-3 mb-3">
+                  Inventory
+                </h3>
                 <NavLink
                   to="/dashboard/manage-medicines"
-                  className="block px-4 py-2 my-2 rounded hover:bg-orange-500"
-                  activeClassName="bg-orange-500"
+                  className={({ isActive }) =>
+                    `flex items-center px-4 py-3 rounded-xl transition-all duration-200 group ${
+                      isActive
+                        ? "bg-blue-600 text-white shadow-lg"
+                        : "text-blue-100 hover:bg-blue-700 hover:text-white"
+                    }`
+                  }
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Manage Medicine
+                  <FaPills className="text-blue-300 group-hover:text-blue-200 mr-3 text-sm" />
+                  <span className="font-medium">Manage Medicine</span>
                 </NavLink>
-              </li>
-              <li>
+
                 <NavLink
                   to="/dashboard/advertisement"
-                  className="block px-4 py-2 my-2 rounded hover:bg-orange-500"
-                  activeClassName="bg-orange-500"
+                  className={({ isActive }) =>
+                    `flex items-center px-4 py-3 rounded-xl transition-all duration-200 group ${
+                      isActive
+                        ? "bg-blue-600 text-white shadow-lg"
+                        : "text-blue-100 hover:bg-blue-700 hover:text-white"
+                    }`
+                  }
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Advertisement
+                  <FaBullhorn className="text-blue-300 group-hover:text-blue-200 mr-3 text-sm" />
+                  <span className="font-medium">Advertisement</span>
                 </NavLink>
-              </li>
-              <li>
+              </div>
+
+              {/* Financial Section */}
+              <div className="mb-6">
+                <h3 className="text-blue-300 text-xs font-semibold uppercase tracking-wider px-3 mb-3">
+                  Financial
+                </h3>
                 <NavLink
                   to="/dashboard/payment-history"
-                  className="block px-4 py-2 my-2 rounded hover:bg-orange-500"
-                  activeClassName="bg-orange-500"
+                  className={({ isActive }) =>
+                    `flex items-center px-4 py-3 rounded-xl transition-all duration-200 group ${
+                      isActive
+                        ? "bg-blue-600 text-white shadow-lg"
+                        : "text-blue-100 hover:bg-blue-700 hover:text-white"
+                    }`
+                  }
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Payment History
+                  <FaFileInvoiceDollar className="text-blue-300 group-hover:text-blue-200 mr-3 text-sm" />
+                  <span className="font-medium">Payment History</span>
                 </NavLink>
-              </li>
-            </div>
+              </div>
+            </>
           )}
 
           {!isAdmin && !isSeller && (
-            <ul className="space-y-4">
-              <li>
+            <>
+              {/* User Header */}
+              <div className="bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl p-4 mb-6">
+                <h2 className="text-white font-bold text-lg flex items-center">
+                  <FaUser className="mr-2" />
+                  User Portal
+                </h2>
+                <p className="text-purple-100 text-sm">Manage your profile</p>
+              </div>
+
+              <div className="space-y-2">
                 <NavLink
                   to="/"
-                  className="block px-4 py-2 border-2 text-center font-semibold rounded hover:bg-orange-500"
-                  activeClassName="bg-orange-500"
+                  className={({ isActive }) =>
+                    `flex items-center px-4 py-3 rounded-xl transition-all duration-200 group ${
+                      isActive
+                        ? "bg-blue-600 text-white shadow-lg"
+                        : "text-blue-100 hover:bg-blue-700 hover:text-white"
+                    }`
+                  }
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Home
+                  <FaHome className="text-blue-300 group-hover:text-blue-200 mr-3 text-sm" />
+                  <span className="font-medium">Home</span>
                 </NavLink>
-              </li>
-              <li>
+
                 <NavLink
                   to="/update-profile"
-                  className="block px-4 py-2 border-2 text-center font-semibold rounded hover:bg-orange-500"
-                  activeClassName="bg-orange-500"
+                  className={({ isActive }) =>
+                    `flex items-center px-4 py-3 rounded-xl transition-all duration-200 group ${
+                      isActive
+                        ? "bg-blue-600 text-white shadow-lg"
+                        : "text-blue-100 hover:bg-blue-700 hover:text-white"
+                    }`
+                  }
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Profile Update
+                  <FaUser className="text-blue-300 group-hover:text-blue-200 mr-3 text-sm" />
+                  <span className="font-medium">Profile Update</span>
                 </NavLink>
-              </li>
-            </ul>
+              </div>
+            </>
           )}
-        </ul>
+        </nav>
       </div>
 
-      <div className="flex-1 p-4">
-        <Outlet />
+      {/* Main Content Area */}
+      <div className="flex-1 bg-white md:m-4 md:rounded-2xl shadow-xl overflow-hidden">
+        <div className="p-6 h-full overflow-y-auto">
+          <Outlet />
+        </div>
       </div>
     </div>
   );

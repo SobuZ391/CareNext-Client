@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import useAuth from '../../../Hooks/useAuth';
-import Swal from 'sweetalert2';
-import { Helmet } from 'react-helmet-async';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import useAuth from "../../../Hooks/useAuth";
+import Swal from "sweetalert2";
+import { Helmet } from "react-helmet-async";
 
 const AskForAdvertisement = () => {
   const [medicines, setMedicines] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [newAd, setNewAd] = useState({ image: '', name: '', description: '' });
+  const [newAd, setNewAd] = useState({ image: "", name: "", description: "" });
   const { user } = useAuth();
 
   useEffect(() => {
@@ -16,13 +16,16 @@ const AskForAdvertisement = () => {
 
   const fetchReferredMedicines = async () => {
     try {
-      const response = await axios.get('https://y-plum-nine.vercel.app/seller/referred-medicines', {
-        params: { sellerEmail: user.email }
-      });
+      const response = await axios.get(
+        "https://y-plum-nine.vercel.app/seller/referred-medicines",
+        {
+          params: { sellerEmail: user.email },
+        }
+      );
       const data = response.data;
       setMedicines(Array.isArray(data) ? data : []);
     } catch (error) {
-      console.error('Error fetching referred medicines:', error);
+      console.error("Error fetching referred medicines:", error);
     }
   };
 
@@ -39,11 +42,14 @@ const AskForAdvertisement = () => {
     e.preventDefault();
 
     try {
-      const imgbbApiKey = '8954c730e8c64d440537819fbd7d93c3';
+      const imgbbApiKey = "8954c730e8c64d440537819fbd7d93c3";
       const formData = new FormData();
-      formData.append('image', newAd.image);
+      formData.append("image", newAd.image);
 
-      const imgbbResponse = await axios.post(`https://api.imgbb.com/1/upload?key=${imgbbApiKey}`, formData);
+      const imgbbResponse = await axios.post(
+        `https://api.imgbb.com/1/upload?key=${imgbbApiKey}`,
+        formData
+      );
       const imageUrl = imgbbResponse.data.data.url;
 
       const adData = {
@@ -53,22 +59,27 @@ const AskForAdvertisement = () => {
         sellerEmail: user.email,
       };
 
-      await axios.post('https://y-plum-nine.vercel.app/seller/advertisements', adData);
+      await axios.post(
+        "https://y-plum-nine.vercel.app/seller/advertisements",
+        adData
+      );
 
       setShowModal(false);
       fetchReferredMedicines();
 
       Swal.fire({
-        icon: 'success',
-        title: 'Advertisement Submitted',
-        text: 'Your advertisement has been successfully submitted.',
+        icon: "success",
+        title: "Advertisement Submitted",
+        text: "Your advertisement has been successfully submitted.",
       });
     } catch (error) {
-      console.error('Error submitting advertisement:', error);
+      console.error("Error submitting advertisement:", error);
       Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: `Failed to submit advertisement. ${error.response ? error.response.data.error : 'Please try again later.'}`,
+        icon: "error",
+        title: "Error",
+        text: `Failed to submit advertisement. ${
+          error.response ? error.response.data.error : "Please try again later."
+        }`,
       });
     }
   };
@@ -76,30 +87,38 @@ const AskForAdvertisement = () => {
   return (
     <div className="container mx-auto p-4">
       <Helmet>
-        <title>Medi-Shop | Dashboard | Advertisement</title>
-       
+        <title>CareNext Pharamacy | Dashboard | Advertisement</title>
       </Helmet>
-      <button className="btn btn-primary mb-4" onClick={() => setShowModal(true)}>
+      <button
+        className="btn btn-primary mb-4"
+        onClick={() => setShowModal(true)}
+      >
         Add Advertisement
       </button>
       <table className="table w-full">
         <thead>
           <tr>
-            <th  className='border'>Medicine Image</th>
-            <th  className='border'>Medicine Name</th>
-            <th  className='border'>Description</th>
-            <th  className='border'>Status</th>
+            <th className="border">Medicine Image</th>
+            <th className="border">Medicine Name</th>
+            <th className="border">Description</th>
+            <th className="border">Status</th>
           </tr>
         </thead>
         <tbody>
           {medicines.map((medicine, index) => (
             <tr key={index}>
-              <td className='border'><img src={medicine.image} alt={medicine.mediName} className="w-16 h-16 object-cover" /></td>
-              <td className='border'>{medicine.mediName}</td>
-              <td className='border'>{medicine.description}</td>
-              <td className='border'>
-        {medicine.in_slider ? 'In Slider' : 'Not in Slider'}
-      </td>
+              <td className="border">
+                <img
+                  src={medicine.image}
+                  alt={medicine.mediName}
+                  className="w-16 h-16 object-cover"
+                />
+              </td>
+              <td className="border">{medicine.mediName}</td>
+              <td className="border">{medicine.description}</td>
+              <td className="border">
+                {medicine.in_slider ? "In Slider" : "Not in Slider"}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -111,11 +130,21 @@ const AskForAdvertisement = () => {
             <h2 className="text-xl mb-4">Add Advertisement</h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
-                <label htmlFor="image" className="block text-gray-700">Medicine Image:</label>
-                <input type="file" id="image" name="image" onChange={handleFileChange} required />
+                <label htmlFor="image" className="block text-gray-700">
+                  Medicine Image:
+                </label>
+                <input
+                  type="file"
+                  id="image"
+                  name="image"
+                  onChange={handleFileChange}
+                  required
+                />
               </div>
               <div className="mb-4">
-                <label htmlFor="name" className="block text-gray-700">Medicine Name:</label>
+                <label htmlFor="name" className="block text-gray-700">
+                  Medicine Name:
+                </label>
                 <input
                   type="text"
                   id="name"
@@ -127,7 +156,9 @@ const AskForAdvertisement = () => {
                 />
               </div>
               <div className="mb-4">
-                <label htmlFor="description" className="block text-gray-700">Description:</label>
+                <label htmlFor="description" className="block text-gray-700">
+                  Description:
+                </label>
                 <textarea
                   id="description"
                   name="description"
@@ -137,7 +168,9 @@ const AskForAdvertisement = () => {
                   required
                 ></textarea>
               </div>
-              <button type="submit" className="btn btn-success">Submit</button>
+              <button type="submit" className="btn btn-success">
+                Submit
+              </button>
               <button
                 type="button"
                 className="btn btn-secondary ml-2"

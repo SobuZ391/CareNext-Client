@@ -1,33 +1,37 @@
-import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
-import logo from '../../../public/logo.png'; // Replace with your actual logo path
-import { Helmet } from 'react-helmet-async';
+import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import logo from "../../../public/logo.png"; // Replace with your actual logo path
+import { Helmet } from "react-helmet-async";
 
 const fetchAllSales = async () => {
-  const response = await axios.get('https://y-plum-nine.vercel.app/payments');
+  const response = await axios.get("https://y-plum-nine.vercel.app/payments");
   return response.data;
 };
-
+// here i need to work about seller can only see his product sale update
 const SalesReport = () => {
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [filteredSales, setFilteredSales] = useState([]);
 
-  const { data: sales = [], isFetching, error } = useQuery({
-    queryKey: ['allSales'],
+  const {
+    data: sales = [],
+    isFetching,
+    error,
+  } = useQuery({
+    queryKey: ["allSales"],
     queryFn: fetchAllSales,
   });
 
   const handleFilterByDate = () => {
     if (new Date(startDate) > new Date(endDate)) {
-      alert('End date should be after start date');
+      alert("End date should be after start date");
       return;
     }
 
-    const filtered = sales.filter(sale => {
+    const filtered = sales.filter((sale) => {
       const saleDate = new Date(sale.date);
       return saleDate >= new Date(startDate) && saleDate <= new Date(endDate);
     });
@@ -41,27 +45,33 @@ const SalesReport = () => {
     // Add logo
     const img = new Image();
     img.src = logo;
-    doc.addImage(img, 'PNG', 15, 10, 50, 20);
+    doc.addImage(img, "PNG", 15, 10, 50, 20);
 
     // Title
     doc.setFontSize(18);
-    doc.text('Sales Report', 14, 40);
+    doc.text("Sales Report", 14, 40);
 
     // Subtitle with date range
     doc.setFontSize(12);
     doc.text(`Report for: ${startDate} to ${endDate}`, 14, 50);
 
     // Table
-    const tableColumn = ["Medicine Name", "Seller Email", "Buyer Email", "Total Price", "Date"];
+    const tableColumn = [
+      "Medicine Name",
+      "Seller Email",
+      "Buyer Email",
+      "Total Price",
+      "Date",
+    ];
     const tableRows = [];
 
-    filteredSales.forEach(sale => {
+    filteredSales.forEach((sale) => {
       const saleData = [
-        sale.mediName || 'N/A',
-        sale.sellerEmail || 'N/A',
-        sale.email || 'N/A',
-        sale.amount !== undefined ? `$${sale.amount.toFixed(2)}` : 'N/A',
-        sale.date ? new Date(sale.date).toLocaleDateString() : 'N/A'
+        sale.mediName || "N/A",
+        sale.sellerEmail || "N/A",
+        sale.email || "N/A",
+        sale.amount !== undefined ? `$${sale.amount.toFixed(2)}` : "N/A",
+        sale.date ? new Date(sale.date).toLocaleDateString() : "N/A",
       ];
       tableRows.push(saleData);
     });
@@ -78,24 +88,25 @@ const SalesReport = () => {
 
   return (
     <div>
-     <Helmet>
-        <title>Medi-Shop | Dashboard | Sales Report</title>
-       
+      <Helmet>
+        <title>CareNext Pharamacy | Dashboard | Sales Report</title>
       </Helmet>
       <h2 className="text-2xl font-semibold mb-4">Sales Report</h2>
-      <h1 className='text-2xl font-bold p-4 underline text-green-500'>NB: You have to select the initial and final dates to show the data.</h1>
+      <h1 className="text-2xl font-bold p-4 underline text-green-500">
+        NB: You have to select the initial and final dates to show the data.
+      </h1>
       <div className="flex mb-4">
         <input
           type="date"
           className="px-4 py-2 mr-2 border rounded"
           value={startDate}
-          onChange={e => setStartDate(e.target.value)}
+          onChange={(e) => setStartDate(e.target.value)}
         />
         <input
           type="date"
           className="px-4 py-2 mr-2 border rounded"
           value={endDate}
-          onChange={e => setEndDate(e.target.value)}
+          onChange={(e) => setEndDate(e.target.value)}
         />
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded"
@@ -103,9 +114,10 @@ const SalesReport = () => {
         >
           Filter
         </button>
-
       </div>
-      <h1 className='font-bold text-lg text-green-400 shadow-sm underline border p-2' >NB: Atleast select 2 different date for getting 24 hour's data.</h1>
+      <h1 className="font-bold text-lg text-green-400 shadow-sm underline border p-2">
+        NB: Atleast select 2 different date for getting 24 hour's data.
+      </h1>
       {isFetching && <p>Loading...</p>}
       {error && <p>Error fetching sales report.</p>}
       {!isFetching && !error && (
@@ -121,13 +133,23 @@ const SalesReport = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredSales.map(sale => (
+              {filteredSales.map((sale) => (
                 <tr key={sale.id}>
-                  <td className="border px-4 py-2">{sale.mediName || 'N/A'}</td>
-                  <td className="border px-4 py-2">{sale.sellerEmail || 'N/A'}</td>
-                  <td className="border px-4 py-2">{sale.email || 'N/A'}</td>
-                  <td className="border px-4 py-2">{sale.amount !== undefined ? `$${sale.amount.toFixed(2)}` : 'N/A'}</td>
-                  <td className="border px-4 py-2">{sale.date ? new Date(sale.date).toLocaleDateString() : 'N/A'}</td>
+                  <td className="border px-4 py-2">{sale.mediName || "N/A"}</td>
+                  <td className="border px-4 py-2">
+                    {sale.sellerEmail || "N/A"}
+                  </td>
+                  <td className="border px-4 py-2">{sale.email || "N/A"}</td>
+                  <td className="border px-4 py-2">
+                    {sale.amount !== undefined
+                      ? `$${sale.amount.toFixed(2)}`
+                      : "N/A"}
+                  </td>
+                  <td className="border px-4 py-2">
+                    {sale.date
+                      ? new Date(sale.date).toLocaleDateString()
+                      : "N/A"}
+                  </td>
                 </tr>
               ))}
             </tbody>
